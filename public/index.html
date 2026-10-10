@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#080d19" />
+    <meta name="description" content="مرورگر موبایل چندبرگه‌ای؛ درخواست سایت‌های مجاز از مسیر Cloudflare Workers عبور می‌کنند." />
+    <meta name="application-name" content="سپهر" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="سپهر" />
+    <title>سپهر — مرورگر موبایل</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/app-icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/app-icon-192.png" />
+    <link rel="stylesheet" href="/app.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-header">
+        <div class="brand-lockup" aria-label="سپهر">
+          <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="brand-copy">
+            <strong>سپهر</strong>
+            <span>مرورگر امن</span>
+          </div>
+          <span class="build-pill">CLOUD WORKER</span>
+        </div>
+
+        <div class="header-center">
+          <div class="connection-indicator" id="connection-indicator">
+            <span class="connection-dot"></span>
+            <span id="connection-label">آمادهٔ اتصال</span>
+          </div>
+        </div>
+
+        <div class="account-area">
+          <button class="icon-button header-install" id="install-button" type="button" aria-label="نصب سپهر روی گوشی" title="نصب اپ" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m-4-4 4 4 4-4M5 17v3h14v-3"></path></svg>
+          </button>
+          <button class="icon-button header-help" id="help-button" aria-label="راهنما" title="راهنما">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.6 9a2.5 2.5 0 1 1 4.2 1.8c-1.1 1-1.8 1.4-1.8 2.8M12 17.2h.01"></path></svg>
+          </button>
+          <button class="google-button" id="auth-button" type="button">
+            <span class="google-g" aria-hidden="true">G</span>
+            <span id="auth-button-label">ورود با گوگل</span>
+          </button>
+          <div class="profile-control" id="profile-control" hidden>
+            <button class="profile-button" id="profile-button" aria-label="حساب کاربری" aria-expanded="false">
+              <span class="profile-avatar" id="profile-avatar">س</span>
+              <span class="profile-name" id="profile-name">حساب کاربری</span>
+              <svg class="chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7.5 5 5 5-5"></path></svg>
+            </button>
+            <div class="profile-menu" id="profile-menu" hidden>
+              <div class="profile-menu-email" id="profile-email"></div>
+              <button id="logout-button" type="button">خروج از حساب</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="browser-window" aria-label="مرورگر وب">
+        <div class="tab-strip" id="tab-strip" role="tablist" aria-label="برگه‌های باز">
+          <button class="tab-add" id="new-tab-button" type="button" aria-label="برگهٔ تازه" title="برگهٔ تازه">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"></path></svg>
+          </button>
+        </div>
+
+        <div class="toolbar">
+          <div class="nav-controls" aria-label="کنترل‌های مرور">
+            <button class="icon-button toolbar-button" id="back-button" type="button" aria-label="بازگشت" title="بازگشت" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"></path></svg>
+            </button>
+            <button class="icon-button toolbar-button" id="forward-button" type="button" aria-label="جلو" title="جلو" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg>
+            </button>
+            <button class="icon-button toolbar-button" id="reload-button" type="button" aria-label="بارگذاری دوباره" title="بارگذاری دوباره">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.8-3L4 10m0-5v5h5M4 13a8 8 0 0 0 14.8 3L20 14m0 5v-5h-5"></path></svg>
+            </button>
+            <button class="icon-button toolbar-button home-button" id="home-button" type="button" aria-label="صفحهٔ آغاز" title="صفحهٔ آغاز">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"></path></svg>
+            </button>
+          </div>
+
+          <form class="address-form" id="address-form" autocomplete="off">
+            <span class="address-shield" id="address-shield" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.7-2.9 8.1-7 10-4.1-1.9-7-5.3-7-10V6z"></path><path d="m9 12 2 2 4-4"></path></svg>
+            </span>
+            <label class="visually-hidden" for="address-input">جست‌وجو یا واردکردن نشانی وب</label>
+            <input id="address-input" name="url" type="text" inputmode="url" placeholder="جست‌وجو یا واردکردن نشانی وب" spellcheck="false" autocapitalize="off" />
+            <span class="address-domain" id="address-domain" hidden></span>
+            <button class="address-clear" id="clear-address-button" type="button" aria-label="پاک‌کردن نشانی" hidden>×</button>
+          </form>
+
+          <div class="toolbar-actions">
+            <button class="icon-button toolbar-button" id="bookmark-button" type="button" aria-label="افزودن نشانک" title="افزودن نشانک" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.8A1.8 1.8 0 0 1 7.8 3h8.4A1.8 1.8 0 0 1 18 4.8V21l-6-3.8L6 21z"></path></svg>
+            </button>
+            <button class="icon-button toolbar-button" id="library-button" type="button" aria-label="نشانک‌ها و تاریخچه" title="نشانک‌ها و تاریخچه">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H20v17H6.5A1.5 1.5 0 0 1 5 18.5zM5 7h15M8 10h8M8 13h6"></path><path d="M5 18.5A1.5 1.5 0 0 1 6.5 17H20"></path></svg>
+            </button>
+            <button class="icon-button toolbar-button settings-button" id="settings-button" type="button" aria-label="تنظیمات" title="تنظیمات">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"></path><path d="m19.4 15 .1.1 1.1.9-1.5 2.6-1.4-.5a7.8 7.8 0 0 1-1.7 1l-.2 1.5h-3l-.3-1.5a7.8 7.8 0 0 1-1.7-1l-1.4.5-1.5-2.6 1.1-.9a7.1 7.1 0 0 1 0-2l-1.1-.9 1.5-2.6 1.4.5a7.8 7.8 0 0 1 1.7-1l.3-1.5h3l.2 1.5a7.8 7.8 0 0 1 1.7 1l1.4-.5 1.5 2.6-1.1.9a7.1 7.1 0 0 1 0 2Z" transform="translate(-1 -1)"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="bookmark-shelf" id="bookmark-shelf" aria-label="نشانک‌های سریع"></div>
+
+        <div class="browser-stage" id="browser-stage">
+          <div class="tab-panels" id="tab-panels"></div>
+          <div class="loading-indicator" id="loading-indicator" aria-live="polite" hidden><span class="spinner"></span><span>در حال اتصال امن…</span></div>
+        </div>
+
+        <template id="startup-template">
+          <div class="startup-view">
+            <div class="startup-glow startup-glow-one"></div>
+            <div class="startup-glow startup-glow-two"></div>
+            <section class="startup-content">
+              <div class="start-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+              <p class="eyebrow">فضای مرور خصوصی شما</p>
+              <h1>وب را <span>روشن‌تر</span> ببینید.</h1>
+              <p class="startup-copy">چند برگه، یک فضای منظم؛ ترافیک مقصدها از دروازهٔ امن سپهر عبور می‌کند.</p>
+              <form class="quick-search">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg>
+                <label class="visually-hidden">جست‌وجو یا واردکردن نشانی</label>
+                <input class="quick-search-input" type="text" aria-label="جست‌وجو یا واردکردن نشانی" placeholder="جست‌وجو یا واردکردن نشانی" spellcheck="false" />
+                <button type="submit" aria-label="برو"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></button>
+              </form>
+              <div class="home-quicklinks">
+                <button class="quicklink" type="button" data-url="https://arena.ai">
+                  <span class="quicklink-icon arena-icon">A</span><span>Arena.ai</span>
+                </button>
+                <button class="quicklink" type="button" data-url="https://example.com">
+                  <span class="quicklink-icon example-icon">e</span><span>Example</span>
+                </button>
+                <button class="quicklink" type="button" data-url="https://developers.cloudflare.com">
+                  <span class="quicklink-icon cf-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16h11a3 3 0 0 0 0-6 5 5 0 0 0-9.6-1.3A3.7 3.7 0 0 0 7 16Z"></path><path d="M4 18h12"></path></svg></span><span>Cloudflare</span>
+                </button>
+                <button class="quicklink add-shortcut-button" type="button">
+                  <span class="quicklink-icon add-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></span><span>افزودن میان‌بر</span>
+                </button>
+              </div>
+              <div class="setup-banner" hidden>
+                <span class="setup-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2.8 19h18.4L12 3Z"></path><path d="M12 9v4m0 3h.01"></path></svg></span>
+                <div><strong class="setup-title">پیکربندی سرویس</strong><p class="setup-description">برای شروع، تنظیمات Worker را بررسی کنید.</p></div>
+                <button type="button" class="setup-login-button" hidden>ورود با گوگل</button>
+              </div>
+            </section>
+            <div class="startup-footnote"><span class="footnote-shield"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 19 6v5c0 4.7-2.9 8.1-7 10-4.1-1.9-7-5.3-7-10V6z"></path><path d="m9 12 2 2 4-4"></path></svg></span><span>پروکسی با allowlist محدود می‌شود؛ مقصدهای خصوصی و محلی مسدود هستند.</span><button class="learn-more-button" type="button">بیشتر بدانید</button></div>
+          </div>
+        </template>
+
+        <footer class="browser-footer">
+          <div class="footer-left"><span class="footer-shield"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 19 6v5c0 4.7-2.9 8.1-7 10-4.1-1.9-7-5.3-7-10V6z"></path><path d="m9 12 2 2 4-4"></path></svg></span><span id="footer-status">پروکسی آمادهٔ پیکربندی</span></div>
+          <div class="footer-right"><span class="footer-kbd">CTRL</span><span class="footer-plus">+</span><span class="footer-kbd">L</span><span>رفتن به نوار نشانی</span><span class="footer-divider"></span><span id="tab-count">۱ برگه</span></div>
+        </footer>
+      </section>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </main>
+
+    <dialog class="modal" id="settings-dialog">
+      <form method="dialog" class="modal-form">
+        <div class="modal-header"><div><span class="modal-kicker">سپهر · مرکز کنترل</span><h2>تنظیمات و وضعیت امنیت</h2></div><button class="modal-close" aria-label="بستن">×</button></div>
+        <div class="settings-status-card" id="settings-status-card">
+          <span class="status-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 19 6v5c0 4.7-2.9 8.1-7 10-4.1-1.9-7-5.3-7-10V6z"></path><path d="m9 12 2 2 4-4"></path></svg></span>
+          <div><strong id="settings-status-title">در حال بررسی</strong><p id="settings-status-description">وضعیت احراز هویت و مقصدهای مجاز.</p></div>
+        </div>
+        <div class="settings-grid">
+          <article class="settings-item"><span class="settings-number">۰۱</span><div><strong>ورود با گوگل</strong><p id="settings-auth-state">وضعیت ورود بررسی می‌شود.</p></div></article>
+          <article class="settings-item"><span class="settings-number">۰۲</span><div><strong>محدودیت مقصد</strong><p id="settings-proxy-state">فقط دامنه‌های فهرست‌شده از سوی مدیر قابل دسترسی هستند.</p></div></article>
+          <article class="settings-item"><span class="settings-number">۰۳</span><div><strong>مرزهای مرورگر</strong><p>محتوای وب در قاب sandbox‌شده باز می‌شود تا به رابط سپهر دسترسی نداشته باشد.</p></div></article>
+          <article class="settings-item"><span class="settings-number">۰۴</span><div><strong>محدودیت پلتفرم</strong><p>درخواست‌های HTTP/HTTPS و WebSocket عبور می‌کنند؛ تونل خام TCP، UDP و CONNECT در Worker در دسترس نیست.</p></div></article>
+        </div>
+        <div class="modal-note">ورود گوگل برای حساب کاربری خودِ سپهر است. ورود به حساب‌های سایت‌های داخل قاب ممکن است به‌دلیل محدودیت‌های مرورگر تعبیه‌شده یا سیاست همان سایت در دسترس نباشد.</div>
+        <div class="modal-actions"><button class="secondary-button" type="button" id="open-library-from-settings">نشانک‌ها و تاریخچه</button><button class="primary-button" type="button" id="settings-done-button">متوجه شدم</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="modal library-modal" id="library-dialog">
+      <form method="dialog" class="modal-form">
+        <div class="modal-header"><div><span class="modal-kicker">کتابخانه</span><h2>نشانک‌ها و تاریخچه</h2></div><button class="modal-close" aria-label="بستن">×</button></div>
+        <div class="library-tabs" role="tablist"><button type="button" class="library-tab active" data-library="bookmarks">نشانک‌ها</button><button type="button" class="library-tab" data-library="history">تاریخچه</button></div>
+        <div class="library-list" id="library-list"></div>
+        <div class="library-empty" id="library-empty" hidden><span class="empty-orbit">✦</span><strong>هنوز چیزی اینجا نیست</strong><p>سایت‌های دلخواه را نشانک کنید یا چند صفحه را مرور کنید.</p></div>
+        <div class="modal-actions library-actions"><button class="secondary-button" type="button" id="clear-history-button">پاک‌کردن تاریخچه</button><button class="primary-button" type="button" id="library-done-button">بستن</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="modal shortcut-modal" id="shortcut-dialog">
+      <form method="dialog" class="modal-form" id="shortcut-form">
+        <div class="modal-header"><div><span class="modal-kicker">صفحهٔ آغاز</span><h2>افزودن میان‌بر</h2></div><button class="modal-close" aria-label="بستن">×</button></div>
+        <label class="field-label" for="shortcut-name">نام</label><input class="dialog-input" id="shortcut-name" maxlength="32" required placeholder="مثلاً مستندات" />
+        <label class="field-label" for="shortcut-url">نشانی</label><input class="dialog-input" id="shortcut-url" type="url" required placeholder="https://example.com" />
+        <div class="modal-actions"><button class="secondary-button" type="button" id="shortcut-cancel-button">انصراف</button><button class="primary-button" type="submit">ذخیرهٔ میان‌بر</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="modal install-modal" id="install-dialog">
+      <form method="dialog" class="modal-form">
+        <div class="modal-header"><div><span class="modal-kicker">برنامهٔ موبایل سپهر</span><h2>افزودن به صفحهٔ اصلی</h2></div><button class="modal-close" aria-label="بستن">×</button></div>
+        <p class="install-guidance" id="install-instructions">از منوی مرورگر گزینهٔ «نصب برنامه» یا «افزودن به صفحهٔ اصلی» را انتخاب کنید.</p>
+        <div class="modal-note">این نسخه یک وب‌اپ نصب‌شدنی است، نه VPN سیستمی؛ فقط صفحه‌هایی که داخل سپهر باز می‌کنید از مسیر Worker عبور می‌کنند و همچنان به allowlist سرور وابسته‌اند.</div>
+        <div class="modal-actions"><button class="primary-button" type="submit">متوجه شدم</button></div>
+      </form>
+    </dialog>
+  </body>
+</html>

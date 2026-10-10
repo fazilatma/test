@@ -1,0 +1,22 @@
+name = "sepehr-worker-browser"
+main = "src/index.ts"
+compatibility_date = "2026-10-07"
+workers_dev = true
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = true
+
+[vars]
+# Set false only when deliberately operating as a public, allowlisted guest proxy.
+AUTH_REQUIRED = "true"
+# Comma-separated exact hostnames or subdomains, e.g. "example.com,*.example.org".
+# Default is scoped to Arena.ai; extend only with additional trusted dependencies.
+PROXY_ALLOWED_HOSTS = "arena.ai,*.arena.ai,www.google.com,www.gstatic.com"
+# Optional Google account restrictions. Comma-separated exact emails and/or one domain.
+GOOGLE_ALLOWED_EMAILS = ""
+GOOGLE_ALLOWED_DOMAIN = ""
+
+[observability]
+enabled = true

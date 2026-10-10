@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="tile" x1=".12" y1=".06" x2=".92" y2="1">
+      <stop offset="0" stop-color="#1b2947"/>
+      <stop offset="1" stop-color="#10192c"/>
+    </linearGradient>
+    <linearGradient id="bars" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b2c0ff"/>
+      <stop offset="1" stop-color="#73e0c5"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".28" cy=".1" r=".9">
+      <stop offset="0" stop-color="#8398ff" stop-opacity=".23"/>
+      <stop offset="1" stop-color="#8398ff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="118" fill="#080d19"/>
+  <rect x="34" y="34" width="444" height="444" rx="112" fill="url(#tile)" stroke="#9aaeff" stroke-opacity=".24" stroke-width="3"/>
+  <rect x="34" y="34" width="444" height="444" rx="112" fill="url(#glow)"/>
+  <rect x="65" y="65" width="382" height="382" rx="87" fill="none" stroke="#ffffff" stroke-opacity=".07" stroke-width="2"/>
+  <g fill="url(#bars)" filter="none" transform="translate(0 3) skewX(-13)">
+    <rect x="203" y="219" width="27" height="78" rx="13.5" opacity=".78"/>
+    <rect x="250" y="174" width="29" height="168" rx="14.5"/>
+    <rect x="300" y="196" width="27" height="124" rx="13.5" opacity=".88"/>
+  </g>
+  <circle cx="256" cy="256" r="4" fill="#f1f4ff" fill-opacity=".56"/>
+</svg>

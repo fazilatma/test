@@ -1,0 +1,22 @@
+{
+  "name": "sepehr-worker-browser",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A Google-authenticated, allowlisted browser shell and HTTP proxy for Cloudflare Workers.",
+  "scripts": {
+    "dev": "wrangler dev --ip 0.0.0.0",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261007.1",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.3",
+    "wrangler": "^4.148.0"
+  },
+  "overrides": {
+    "sharp": "^0.35.5"
+  }
+}
