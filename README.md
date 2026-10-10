@@ -39,7 +39,7 @@ curl -fsSL "https://raw.githubusercontent.com/fazilatma/test/arena/b1e2952d-test
 curl -fsSL "https://raw.githubusercontent.com/fazilatma/test/arena/b1e2952d-test/scripts/install.sh" -o /tmp/sepehr-install.sh && bash /tmp/sepehr-install.sh deploy
 ```
 
-نصب‌کننده در صورت نیاز ورود تعاملی به Wrangler را اجرا می‌کند. برای فقط دریافت سورس و وابستگی‌ها، آرگومان `install` و برای پیش‌نمایش محلی در Linux VPS، آرگومان `dev` بدهید. اجرای محلی Wrangler برای Termux پشتیبانی مطمئنی ندارد؛ حالت `deploy` توصیه می‌شود. نسخهٔ `dev` برای آزمایش است، نه سرویس production.
+نصب‌کننده در صورت نیاز ورود تعاملی به Wrangler را اجرا می‌کند. برای فقط دریافت سورس و وابستگی‌ها، آرگومان `install` و برای پیش‌نمایش محلی در Linux VPS، آرگومان `dev` بدهید. Termux باینری `workerd` ندارد؛ نصب‌کننده در Termux اسکریپت‌های نصب باینری را رد می‌کند و فقط مسیر `deploy` به Cloudflare را هدف می‌گیرد. اجرای محلی Wrangler در Termux پشتیبانی نمی‌شود. نسخهٔ `dev` در VPS هم برای آزمایش است، نه سرویس production.
 
 **امنیت:** تنظیم پیش‌فرض ورود Google را اجباری نگه می‌دارد و نصب‌کننده secret یا کلید OAuth نمی‌سازد. پیش از استفاده از پروکسی، OAuth و ایمیل مجاز را طبق بخش راه‌اندازی تنظیم کنید؛ allowlist دامنه‌ها را هم محدود نگه دارید.
 

@@ -92,7 +92,12 @@ fi
 
 printf 'Installing Node dependencies in %s...\n' "$INSTALL_DIR"
 cd "$INSTALL_DIR"
-npm ci
+if [[ "$is_termux" == true ]]; then
+  echo "Termux has no supported workerd binary; skipping package install hooks for remote deployment."
+  npm ci --ignore-scripts
+else
+  npm ci
+fi
 
 case "$MODE" in
   install)

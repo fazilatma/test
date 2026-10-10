@@ -38,4 +38,11 @@ describe("mobile PWA shell", () => {
     expect(serviceWorker).toContain('url.pathname.startsWith("/api/")');
     expect(serviceWorker).toContain('url.pathname.startsWith("/auth/")');
   });
+
+  it("uses a Termux-safe dependency install for Cloudflare deployment", () => {
+    const installer = readFileSync(new URL("../scripts/install.sh", import.meta.url), "utf8");
+    expect(installer).toContain('if [[ "$is_termux" == true ]]');
+    expect(installer).toContain("npm ci --ignore-scripts");
+    expect(installer).toContain('MODE" == "dev" && "$is_termux" == true');
+  });
 });
